@@ -360,7 +360,7 @@
     body.reader-mode { overflow: auto; background: #e7e7e4; }
     body.reader-mode .stage { position: relative; inset: auto; display: block; min-height: 100dvh; padding: 0; overflow: visible; background: #e7e7e4; touch-action: auto; }
     body.reader-mode .presentation-frame { width: var(--reader-frame-width, 100vw); height: var(--reader-frame-height, auto); margin: 0 auto; }
-    body.reader-mode .canvas { position: relative; inset: auto; width: 1920px; height: auto; min-height: 0; overflow: visible; transform: scale(var(--reader-scale, 1)); transform-origin: top left; }
+    body.reader-mode .canvas { position: relative; inset: auto; width: 1920px; height: auto; min-height: 0; overflow: visible; transform: none; transform-origin: top left; }
     body.reader-mode .slide { position: relative; inset: auto; display: flex; width: 1920px; height: 1080px; min-height: 1080px; max-height: 1080px; margin: 0; opacity: 1; visibility: visible; pointer-events: auto; transition: none; }
     body.reader-mode .controls, body.reader-mode .rotate-prompt { display: none !important; }
     body.reader-mode .slide.is-active { opacity: 1; visibility: visible; pointer-events: auto; }
@@ -562,7 +562,8 @@
         frame.style.height = height + 'px';
         canvas.style.width = '1920px';
         canvas.style.height = 'auto';
-        canvas.style.transform = 'scale(' + scale + ')';
+        canvas.style.transform = 'none';
+        canvas.style.zoom = String(scale);
         canvas.style.setProperty('--reader-scale', scale);
         frame.style.setProperty('--reader-frame-width', (1920 * scale) + 'px');
         frame.style.setProperty('--reader-frame-height', height + 'px');
@@ -588,6 +589,7 @@
           canvas.style.width = '100%';
           canvas.style.height = '100%';
           canvas.style.transform = 'none';
+          canvas.style.zoom = '';
           return;
         }
         rotatePrompt.hidden = true;
@@ -603,6 +605,7 @@
           canvas.style.width = width + 'px';
           canvas.style.height = height + 'px';
           canvas.style.transform = 'none';
+          canvas.style.zoom = '';
           return;
         }
         stage.dataset.viewport = 'desktop';
@@ -616,6 +619,7 @@
         canvas.style.width = '1920px';
         canvas.style.height = '1080px';
         canvas.style.transform = 'scale(' + scale + ')';
+        canvas.style.zoom = '';
       }
 
       function auditSlideSafeArea() {
