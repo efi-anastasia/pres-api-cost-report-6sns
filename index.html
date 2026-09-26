@@ -356,6 +356,15 @@
     .stage.mobile-reader .source b { font-size: 13px; }
     .stage.mobile-reader .controls { display: none; }
 
+    /* Document-like reader: every slide is a full 16:9 page in one scrollable document. */
+    body.reader-mode { overflow: auto; background: #e7e7e4; }
+    body.reader-mode .stage { position: relative; inset: auto; display: block; min-height: 100dvh; padding: 0; overflow: visible; background: #e7e7e4; touch-action: auto; }
+    body.reader-mode .presentation-frame { width: var(--reader-frame-width, 100vw); height: var(--reader-frame-height, auto); margin: 0 auto; }
+    body.reader-mode .canvas { position: relative; inset: auto; width: 1920px; height: auto; min-height: 0; overflow: visible; transform: scale(var(--reader-scale, 1)); transform-origin: top left; }
+    body.reader-mode .slide { position: relative; inset: auto; display: flex; width: 1920px; height: 1080px; min-height: 1080px; max-height: 1080px; margin: 0; opacity: 1; visibility: visible; pointer-events: auto; transition: none; }
+    body.reader-mode .controls, body.reader-mode .rotate-prompt { display: none !important; }
+    body.reader-mode .slide.is-active { opacity: 1; visibility: visible; pointer-events: auto; }
+
     @media print {
       @page { size: 1920px 1080px; margin: 0; }
       html, body { width: auto; height: auto; min-height: 0; }
@@ -497,6 +506,7 @@
       const rotatePrompt = document.getElementById('rotatePrompt');
       const fullscreenButton = document.querySelector('[data-fullscreen]');
       let current = 0;
+      let readerMode = false;
 
       function formatPageNumber(index, total) {
         return String(index + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
@@ -508,6 +518,7 @@
         const page = formatPageNumber(current, slides.length);
         count.textContent = page;
         slides[current].querySelector('.page-no').textContent = page;
+        if (readerMode) slides[current].scrollIntoView({ behavior: 'smooth', block: 'start' });
         if (updateHash !== false) {
           const method = pushHistory ? 'pushState' : 'replaceState';
           history[method](null, '', '#slide-' + String(current + 1));
@@ -525,7 +536,48 @@
       }
       function isMobilePortrait() { const viewport = viewportSize(); return viewport.width <= 1100 && viewport.height >= viewport.width; }
 
+      function shouldUseReader() {
+        const viewport = viewportSize();
+        const forced = new URLSearchParams(location.search).get('view') === 'reader';
+        const phoneOrTablet = viewport.width <= 1100;
+        const wideShort = viewport.width <= 1400 && viewport.width > viewport.height && viewport.width / Math.max(1, viewport.height) >= 1.6;
+        return forced || phoneOrTablet || wideShort;
+      }
+
+      function setReaderMode(enabled) {
+        readerMode = enabled;
+        document.body.classList.toggle('reader-mode', enabled);
+        stage.classList.remove('mobile-reader');
+        if (enabled) {
+          slides.forEach(function (slide, index) { slide.id = 'slide-' + String(index + 1); });
+          requestAnimationFrame(function () { if (current > 0) slides[current].scrollIntoView({ behavior: 'auto', block: 'start' }); });
+        }
+      }
+
+      function fitReader() {
+        const viewport = viewportSize();
+        const scale = Math.min(1, viewport.width / 1920);
+        const height = 1080 * slides.length * scale;
+        frame.style.width = (1920 * scale) + 'px';
+        frame.style.height = height + 'px';
+        canvas.style.width = '1920px';
+        canvas.style.height = 'auto';
+        canvas.style.transform = 'scale(' + scale + ')';
+        canvas.style.setProperty('--reader-scale', scale);
+        frame.style.setProperty('--reader-frame-width', (1920 * scale) + 'px');
+        frame.style.setProperty('--reader-frame-height', height + 'px');
+        rotatePrompt.hidden = true;
+        rotatePrompt.classList.remove('is-visible');
+      }
+
       function fitCanvas() {
+        if (shouldUseReader()) {
+          setReaderMode(true);
+          stage.dataset.viewport = 'reader';
+          fitReader();
+          return;
+        }
+        setReaderMode(false);
         if (isMobilePortrait()) {
           stage.dataset.viewport = 'mobile-portrait';
           stage.classList.remove('mobile-reader');
@@ -641,12 +693,14 @@
       let touchStartY = 0;
       let touchTracking = false;
       stage.addEventListener('touchstart', function (event) {
+        if (readerMode) return;
         if (event.touches.length !== 1) return;
         touchStartX = event.touches[0].clientX;
         touchStartY = event.touches[0].clientY;
         touchTracking = true;
       }, { passive: true });
       stage.addEventListener('touchend', function (event) {
+        if (readerMode) return;
         if (!touchTracking || !event.changedTouches.length) return;
         touchTracking = false;
         const touch = event.changedTouches[0];
