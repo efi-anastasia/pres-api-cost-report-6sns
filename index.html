@@ -243,9 +243,9 @@
     .rotate-prompt.is-visible { display: grid; }
     .rotate-prompt[hidden] { display: none; }
 
-    @media (max-width: 900px) and (orientation: landscape) {
-      .stage { gap: 0; padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(52px, env(safe-area-inset-bottom)); }
-      .presentation-frame { width: 100vw; height: calc(100svh - max(52px, env(safe-area-inset-bottom))); }
+    @media (max-width: 1100px) and (orientation: landscape) {
+      .stage { gap: 0; padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+      .presentation-frame { width: 100vw; height: 100svh; }
       .canvas { width: 100%; height: 100%; aspect-ratio: auto; }
       .slide { padding: 18px 22px; }
       .topline, .footer { font-size: 10px; }
@@ -295,14 +295,66 @@
       .source-list { padding-top: 4px; }
       .source { padding: 12px 0; font-size: 11px; }
       .source b { font-size: 13px; }
-      .controls { position: absolute; left: 0; right: 0; bottom: max(8px, env(safe-area-inset-bottom)); min-height: 38px; }
-      .nav-group { transform: scale(.86); transform-origin: bottom center; }
+      .controls { display: none; }
     }
 
-    @media (orientation: portrait) and (max-width: 900px) {
+    @media (orientation: portrait) and (max-width: 1100px) {
       .stage { padding: 0; }
       .presentation-frame { opacity: .12; }
     }
+
+    /* Mobile reader mode for wide, short Safari/iPad viewports. */
+    .stage.mobile-reader { gap: 0; padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+    .stage.mobile-reader .presentation-frame { width: 100vw; height: 100svh; }
+    .stage.mobile-reader .canvas { width: 100%; height: 100%; aspect-ratio: auto; }
+    .stage.mobile-reader .slide { padding: 18px 22px; }
+    .stage.mobile-reader .topline, .stage.mobile-reader .footer { font-size: 10px; }
+    .stage.mobile-reader .topline { height: 12px; min-height: 12px; }
+    .stage.mobile-reader .footer { height: 28px; min-height: 28px; padding-top: 16px; }
+    .stage.mobile-reader .slide-body { width: 100%; }
+    .stage.mobile-reader h1 { max-width: 70%; margin: 30px 0 18px; font-size: clamp(34px, 7.5vw, 62px); }
+    .stage.mobile-reader .lead { max-width: 56%; font-size: clamp(15px, 2.6vw, 22px); }
+    .stage.mobile-reader .hero-meta { gap: 6px; margin-top: 26px; }
+    .stage.mobile-reader .chip { padding: 6px 9px; font-size: 10px; }
+    .stage.mobile-reader .hero-mark { width: 150px; height: 150px; }
+    .stage.mobile-reader .hero-mark span { font-size: 31px; }
+    .stage.mobile-reader .section-layout, .stage.mobile-reader .sources-layout { grid-template-columns: 24% minmax(0,1fr); gap: 4%; padding-top: 18px; }
+    .stage.mobile-reader .section-left h2, .stage.mobile-reader .sources-layout h2 { margin: 8px 0 12px; font-size: clamp(37px, 7vw, 56px); }
+    .stage.mobile-reader .eyebrow, .stage.mobile-reader .kicker { font-size: 10px; }
+    .stage.mobile-reader .section-copy { max-width: 160px; font-size: 10px; }
+    .stage.mobile-reader .formula { margin-bottom: 14px; padding: 10px 0; font-size: clamp(19px, 3.5vw, 28px); }
+    .stage.mobile-reader .token-row { grid-template-columns: 76px minmax(0,1fr); gap: 10px; min-height: 42px; }
+    .stage.mobile-reader .token-row b, .stage.mobile-reader .price-head, .stage.mobile-reader .budget-row > b { font-size: 9px; }
+    .stage.mobile-reader .token-row p { font-size: clamp(10px, 1.8vw, 14px); }
+    .stage.mobile-reader .architecture-flow { grid-template-columns: 74px minmax(34px,1fr) 74px; margin-top: 18px; }
+    .stage.mobile-reader .flow-node { width: 74px; }
+    .stage.mobile-reader .flow-node b { font-size: 11px; }
+    .stage.mobile-reader .flow-node span { font-size: 7px; }
+    .stage.mobile-reader .pricing { padding-top: 24px; }
+    .stage.mobile-reader .price-row { grid-template-columns: 1.35fr .7fr .7fr .8fr .8fr; gap: 7px; min-height: 45px; }
+    .stage.mobile-reader .price-row.head { min-height: 30px; }
+    .stage.mobile-reader .price-row.head .price-head { font-size: 7px; }
+    .stage.mobile-reader .price-head small, .stage.mobile-reader .price-row small { margin-top: 2px; font-size: 7px; }
+    .stage.mobile-reader .price-row strong { font-size: 11px; }
+    .stage.mobile-reader .price { font-size: 13px; }
+    .stage.mobile-reader .assumption { margin-top: 8px; font-size: 7px; }
+    .stage.mobile-reader .role-grid { gap: 10px; padding-top: 16px; }
+    .stage.mobile-reader .role-card { min-height: 0; padding: 15px; border-top-width: 4px; border-radius: 12px; }
+    .stage.mobile-reader .role-card h3 { margin-bottom: 6px; font-size: clamp(18px, 3.3vw, 27px); }
+    .stage.mobile-reader .role-card > p { margin-bottom: 10px; font-size: 10px; }
+    .stage.mobile-reader .role-list { gap: 5px; }
+    .stage.mobile-reader .role-list li { grid-template-columns: 11px minmax(0,1fr); gap: 4px; font-size: 10px; }
+    .stage.mobile-reader .budget-line { margin: 22px 0 18px; }
+    .stage.mobile-reader .budget-stop { min-height: 55px; padding: 8px; }
+    .stage.mobile-reader .budget-stop b { margin-bottom: 3px; font-size: 24px; }
+    .stage.mobile-reader .budget-stop span { font-size: 8px; }
+    .stage.mobile-reader .budget-row { grid-template-columns: 22px minmax(0,1fr); gap: 8px; min-height: 28px; }
+    .stage.mobile-reader .budget-row p { font-size: 9px; }
+    .stage.mobile-reader .sources-layout { padding-top: 35px; }
+    .stage.mobile-reader .source-list { padding-top: 4px; }
+    .stage.mobile-reader .source { padding: 12px 0; font-size: 11px; }
+    .stage.mobile-reader .source b { font-size: 13px; }
+    .stage.mobile-reader .controls { display: none; }
 
     @media print {
       @page { size: 1920px 1080px; margin: 0; }
@@ -450,21 +502,33 @@
         return String(index + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
       }
 
-      function goTo(index, updateHash) {
+      function goTo(index, updateHash, pushHistory) {
         current = Math.max(0, Math.min(index, slides.length - 1));
         slides.forEach(function (slide, i) { slide.classList.toggle('is-active', i === current); });
         const page = formatPageNumber(current, slides.length);
         count.textContent = page;
         slides[current].querySelector('.page-no').textContent = page;
-        if (updateHash !== false) history.replaceState(null, '', '#slide-' + String(current + 1));
+        if (updateHash !== false) {
+          const method = pushHistory ? 'pushState' : 'replaceState';
+          history[method](null, '', '#slide-' + String(current + 1));
+        }
       }
 
-      function isMobileLandscape() { return window.innerWidth <= 900 && window.innerWidth > window.innerHeight; }
-      function isMobilePortrait() { return window.innerWidth <= 900 && window.innerHeight >= window.innerWidth; }
+      function viewportSize() {
+        const viewport = window.visualViewport;
+        return { width: viewport ? viewport.width : window.innerWidth, height: viewport ? viewport.height : window.innerHeight };
+      }
+      function isMobileLandscape() {
+        const viewport = viewportSize();
+        const wideShortViewport = viewport.width > viewport.height && viewport.width / Math.max(1, viewport.height) >= 1.6;
+        return viewport.width <= 1100 && viewport.width > viewport.height || wideShortViewport;
+      }
+      function isMobilePortrait() { const viewport = viewportSize(); return viewport.width <= 1100 && viewport.height >= viewport.width; }
 
       function fitCanvas() {
         if (isMobilePortrait()) {
           stage.dataset.viewport = 'mobile-portrait';
+          stage.classList.remove('mobile-reader');
           rotatePrompt.hidden = false;
           rotatePrompt.classList.add('is-visible');
           frame.style.width = '100vw';
@@ -478,10 +542,10 @@
         rotatePrompt.classList.remove('is-visible');
         if (isMobileLandscape()) {
           stage.dataset.viewport = 'mobile';
-          const insetX = 20;
-          const controlZone = 52;
-          const width = Math.max(320, window.innerWidth - insetX * 2);
-          const height = Math.max(180, window.innerHeight - controlZone - 10);
+          stage.classList.add('mobile-reader');
+          const viewport = viewportSize();
+          const width = Math.max(320, viewport.width);
+          const height = Math.max(180, viewport.height);
           frame.style.width = width + 'px';
           frame.style.height = height + 'px';
           canvas.style.width = width + 'px';
@@ -490,8 +554,10 @@
           return;
         }
         stage.dataset.viewport = 'desktop';
-        const availableWidth = Math.max(320, window.innerWidth - 40);
-        const availableHeight = Math.max(240, window.innerHeight - 40 - controls.offsetHeight - 18);
+        stage.classList.remove('mobile-reader');
+        const viewport = viewportSize();
+        const availableWidth = Math.max(320, viewport.width - 40);
+        const availableHeight = Math.max(240, viewport.height - 40 - controls.offsetHeight - 18);
         const scale = Math.min(availableWidth / 1920, availableHeight / 1080);
         frame.style.width = (1920 * scale) + 'px';
         frame.style.height = (1080 * scale) + 'px';
@@ -536,9 +602,9 @@
         fullscreenButton.title = active ? 'Exit full screen' : 'Enter full screen';
       }
 
-      document.querySelector('[data-prev]').addEventListener('click', function () { goTo(current - 1); });
-      document.querySelector('[data-next]').addEventListener('click', function () { goTo(current + 1); });
-      document.querySelector('[data-restart]').addEventListener('click', function () { goTo(0); });
+      document.querySelector('[data-prev]').addEventListener('click', function () { goTo(current - 1, true, true); });
+      document.querySelector('[data-next]').addEventListener('click', function () { goTo(current + 1, true, true); });
+      document.querySelector('[data-restart]').addEventListener('click', function () { goTo(0, true, true); });
       document.querySelector('[data-print]').addEventListener('click', function () { window.print(); });
       fullscreenButton.addEventListener('click', function () {
         const active = document.fullscreenElement || document.webkitFullscreenElement;
@@ -565,10 +631,10 @@
       window.addEventListener('afterprint', fitCanvas);
 
       document.addEventListener('keydown', function (event) {
-        if (event.key.toLowerCase() === 'r' || event.key === 'Home') { event.preventDefault(); goTo(0); }
-        if (event.key === 'End') { event.preventDefault(); goTo(slides.length - 1); }
-        if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(event.key)) { event.preventDefault(); goTo(current + 1); }
-        if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(event.key)) { event.preventDefault(); goTo(current - 1); }
+        if (event.key.toLowerCase() === 'r' || event.key === 'Home') { event.preventDefault(); goTo(0, true, true); }
+        if (event.key === 'End') { event.preventDefault(); goTo(slides.length - 1, true, true); }
+        if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(event.key)) { event.preventDefault(); goTo(current + 1, true, true); }
+        if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(event.key)) { event.preventDefault(); goTo(current - 1, true, true); }
       });
 
       let touchStartX = 0;
@@ -586,9 +652,14 @@
         const touch = event.changedTouches[0];
         const deltaX = touch.clientX - touchStartX;
         const deltaY = touch.clientY - touchStartY;
-        if (Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2) goTo(current + (deltaX < 0 ? 1 : -1));
+        if (Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2) goTo(current + (deltaX < 0 ? 1 : -1), true, true);
       }, { passive: true });
       stage.addEventListener('touchcancel', function () { touchTracking = false; }, { passive: true });
+
+      window.addEventListener('popstate', function () {
+        const slideFromHistory = Number(location.hash.replace('#slide-', '')) - 1;
+        if (Number.isInteger(slideFromHistory) && slideFromHistory >= 0) goTo(slideFromHistory, false);
+      });
 
       const hashSlide = Number(location.hash.replace('#slide-', '')) - 1;
       if (Number.isInteger(hashSlide) && hashSlide >= 0) current = Math.min(hashSlide, slides.length - 1);
